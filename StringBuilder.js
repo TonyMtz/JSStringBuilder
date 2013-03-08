@@ -6,7 +6,7 @@
  */
 
 (function(param) {
-    
+
     /*
      * Ready to start? you can create a new instance of StringBuilder object
      * with all the concatenation methods:
@@ -17,41 +17,46 @@
 
     var StringBuilder = function() {
         this.buffer = [], // Buffer where all strings will be saved
-                this.pref = [], // Buffer where all prefixes will be saved
-                this.suff = [], // Buffer where all suffixes will be saved
-                this.pause = {}; // Empty object used on suspend method
-        },
-        emptyArray = [], // Empty array frequently used like default value
-        emptyFunction = function() {}, // Empty array frequently used like default value
-        is_array = function(value) {
-            return Object.prototype.toString.apply(value) === '[object Array]';
-        }, // Function wich returns if the param is an array
-        is_function = function(value) {
-            return typeof(value) === 'function';
-        }, // Function wich returns if the param is a function
-        slice = Array.prototype.slice;
+        this.pref = [], // Buffer where all prefixes will be saved
+        this.suff = [], // Buffer where all suffixes will be saved
+        this.pause = {}; // Empty object used on suspend method
+    },
+    emptyArray = [], // Empty array frequently used like default value
+    emptyFunction = function() {
+    }, // Empty array frequently used like default value
+    is_array = function(value) {
+        return Object.prototype.toString.apply(value) === '[object Array]';
+    }, // Function wich returns if the param is an array
+    is_function = function(value) {
+        return typeof(value) === 'function';
+    }, // Function wich returns if the param is a function
+    push = function() {
+        
+        var args = slice.call(arguments),
+                len = args.length,
+                i,
+                value;
+
+        for (i = 0; i < len; i += 1) {
+            
+            value = args[i];
+            
+            if (is_function(value)) {
+                push.call(this,value.call(this));
+            }
+            else if (is_array(value)) {
+                push.apply(this, value);
+            }
+            else {
+                this.buffer.push(value);
+            }
+            
+        }
+        
+    }, // Function for internal purposes. Push elements to buffer.
+    slice = Array.prototype.slice;
 
     StringBuilder.prototype = {
-        /*
-         * This is for internal purposes only. It's better do not use it.
-         */
-        push: function() {
-            var args = slice.call(arguments),
-                    len = args.length,
-                    i,
-                    value;
-
-            for (i = 0; i < len; i += 1) {
-                value = args[i];
-                if (is_function(value)) {
-                    this.push(value.apply(this));
-                } else if (is_array(value)) {
-                    this.push.apply(this, value);
-                } else {
-                    this.buffer.push(value);
-                }
-            }
-        },
         /*
          * cat(arg1, arg2,..., argN)
          * 
@@ -65,10 +70,11 @@
          * 
          */
         cat: function() {
+
             var args = slice.call(arguments), // converts arguments into a array
-                    len = this.pref.length,
-                    i, // helps to point in suff array
-                    j = len - 1; // helps to point in pref array inversely
+                len = this.pref.length,
+                i, // helps to point in suff array
+                j = len - 1; // helps to point in pref array inversely
 
             for (i = 0; i < len; i += 1) {
                 if (this.pref[j] === this.pause) {
@@ -78,7 +84,9 @@
                 args.push(this.suff[i]);
                 j -= 1;
             }
-            this.push(args);
+            
+            push.apply(this, args);
+            
             return this;
         },
         /*
@@ -91,12 +99,15 @@
          * 
          */
         rep: function() {
+            
             var args = slice.call(arguments), // converts arguments into a array
-                    times = args.pop(), // pop how many times
-                    i;
+                times = args.pop(), // pop how many times
+                i;
+                
             for (i = 0; i < times; i += 1) {
                 this.cat.apply(this, args);
             }
+            
             return this;
         },
         /*
@@ -114,10 +125,13 @@
          * 
          */
         catIf: function() {
+            
             var args = slice.call(arguments); // converts arguments into a array
+            
             if (args.pop()) {
                 this.cat.apply(this, args);
             }
+            
             return this;
         },
         /*
@@ -134,7 +148,9 @@
          * 
          */
         string: function() {
+            
             return this.buffer.join('');
+            
         },
         /*
          * wrap([prefix], [suffix])
@@ -153,9 +169,12 @@
          * 
          */
         wrap: function(prefix, suffix) {
+            
             this.pref.push(prefix);
             this.suff.splice(0, 0, suffix);
+            
             return this;
+            
         },
         /*
          * end(deep)
@@ -170,12 +189,16 @@
          * 
          */
         end: function(deep) {
+            
             deep = deep || 1;
+            
             for (var a = 0; a < deep; a += 1) {
                 this.pref.pop();
                 this.suff.splice(0, 1);
             }
+            
             return this;
+            
         },
         /*
          * prefix(arg1, arg2,..., argN)
@@ -199,7 +222,9 @@
          * 
          */
         prefix: function() {
+            
             return this.wrap(slice.call(arguments), emptyArray);
+            
         },
         /*
          * suffix(arg1, arg2,..., argN)
@@ -218,7 +243,9 @@
          *      
          */
         suffix: function() {
+            
             return this.wrap(emptyArray, slice.call(arguments));
+            
         },
         /*
          * each([args], callback)
@@ -259,14 +286,19 @@
          *      
          */
         each: function(args, callback) {
+            
             args = (is_array(args)) ? args : emptyArray;
             callback = (is_function(callback)) ? callback : emptyFunction;
+            
             var len = args.length,
-                    i;
+                i;
+            
             for (i = 0; i < len; i += 1) {
                 callback.call(this, args[i], i, args);
             }
+            
             return this;
+            
         },
         /*
          * suspend()
@@ -279,7 +311,9 @@
          * 
          */
         suspend: function() {
+            
             return this.wrap(this.pause, this.pause);
+            
         },
         /*
          * when(expression, thenArgs, otherwiseArgs)
@@ -291,9 +325,9 @@
          * 
          */
         when: function(expression, thenArgs, otherwiseArgs) {
-            return (expression) ?
-                    this.cat.call(this, thenArgs) :
-                    this.cat.call(this, otherwiseArgs);
+            
+            return (expression) ? this.cat.call(this, thenArgs) : this.cat.call(this, otherwiseArgs);
+            
         }
     };
 
