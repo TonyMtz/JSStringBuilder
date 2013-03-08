@@ -2,6 +2,7 @@
  * String Builder script for Javascript
  * 
  * Coded by TonyMtz
+ *  http://developx.org
  * 
  */
 
