@@ -31,7 +31,7 @@ console.log('======\nExample #02');
 //  the cat method and its return value will be added to the buffer instead of
 //  the function itself
 
-var sb = new StringBuilder();
+sb = new StringBuilder();
 
 sb
     .cat('This is the first', ' line', '\n')
@@ -52,7 +52,7 @@ console.log('======\nExample #03');
 //  return value will be pushed to the buffer) and any other kind of object
 //  that will be evaluated using the toString() method.
 
-var sb = new StringBuilder();
+sb = new StringBuilder();
 
 sb
     .cat('this', [' is', ' a', ' string'], ' in the')
@@ -62,7 +62,7 @@ console.log(sb.string());
 
 console.log('======\nExample #04');
 
-var sb = new StringBuilder();
+sb = new StringBuilder();
 
 sb
     .cat('this',
@@ -82,7 +82,7 @@ console.log('======\nExample #05');
 
 //  You can use rep method to concatenate the same string a given number of times.
 
-var sb = new StringBuilder();
+sb = new StringBuilder();
 
 sb
     .cat('Mom, can you')
@@ -100,7 +100,7 @@ console.log('======\nExample #06');
 //  be a boolean testable value that will indicate if the given strings shall be
 //  added or not.
 
-var sb = new StringBuilder(), sex = 'f';
+sb = new StringBuilder(), sex = 'f';
 
 sb
     .cat('Hello')
@@ -114,7 +114,7 @@ console.log('======\nExample #07');
 
 //  Also you can surround with a prefix and suffix your strings.
 
-var sb = new StringBuilder();
+sb = new StringBuilder();
 
 sb
     .cat('<ul>', '\n')
@@ -129,7 +129,7 @@ console.log('======\nExample #08');
 //  If you run the app, you should see how the last item looks ugly, this can be
 //  fixed using the end method to stop using the last effect of wrap method
 
-var sb = new StringBuilder();
+sb = new StringBuilder();
 
 sb
     .cat('<ul>', '\n')
@@ -144,7 +144,7 @@ console.log('======\nExample #09');
 
 //  This method also support functions as parameters, like on the following script
 
-var sb = new StringBuilder();
+sb = new StringBuilder();
 
 sb
     .suffix('\n')
@@ -180,7 +180,7 @@ console.log('======\nExample #10');
 //  (this) reference to the StringBuilder and will send three parameters value,
 //  index and the given args array itself.
 
-var sb = new StringBuilder(),
+sb = new StringBuilder(),
     people = [
         {name: 'pepe', sex: 'm', age: 20},
         {name: 'claudia', sex: 'f', age: 21},
@@ -220,7 +220,7 @@ console.log('======\nExample #11');
 // If the expression is a function then if must be called and its result will
 // be used to determine the path to choose.
 
-var sb = new StringBuilder(),
+sb = new StringBuilder(),
     people = [
         {name: 'pepe', sex: 'm', age: 20},
         {name: 'claudia', sex: 'f', age: 21},
